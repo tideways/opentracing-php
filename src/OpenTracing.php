@@ -37,7 +37,7 @@ final class OpenTracing
 
     public static function inject(SpanContext $context, int $format, $carrier)
     {
-        self::getGlobalTracer()->inject($context, $format, $carrier);
+        return self::getGlobalTracer()->inject($context, $format, $carrier);
     }
 
     public static function extract(int $format, $carrier) : SpanContext
