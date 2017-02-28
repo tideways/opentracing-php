@@ -1,0 +1,12 @@
+{
+    "name": "opentracing/opentracing-php",
+    "license": "apache-2.0",
+    "autoload": {
+        "psr-0": {
+            "OpenTracing": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.0.0"
+    }
+}
