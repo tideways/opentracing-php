@@ -4,5 +4,8 @@ namespace OpenTracing;
 
 interface SpanContext
 {
-    public function getBaggage() : array;
+    /**
+     * @return array
+     */
+    public function getBaggage();
 }

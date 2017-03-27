@@ -4,11 +4,11 @@ namespace OpenTracing;
 
 interface Tracer
 {
-    public function startSpan($operationName, array $options) : Span;
+    public function startSpan($operationName, array $options = array());
 
     public function inject(SpanContext $context, $format, $carrier);
 
-    public function extract($format, $carrier) : SpanContext;
+    public function extract($format, $carrier);
 
     /**
      * Allow tracer to transmit span data out of process.

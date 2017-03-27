@@ -21,7 +21,7 @@ final class OpenTracing
         self::$tracer = $tracer;
     }
 
-    private static function getGlobalTracer() : Tracer
+    private static function getGlobalTracer()
     {
         if (self::$tracer === null) {
             self::$tracer = new NullTracer();
@@ -30,17 +30,17 @@ final class OpenTracing
         return self::$tracer;
     }
 
-    public static function startSpan(string $operationName, array $options) : Span
+    public static function startSpan($operationName, array $options = array())
     {
         return self::getGlobalTracer()->startSpan($operationName, $options);
     }
 
-    public static function inject(SpanContext $context, int $format, $carrier)
+    public static function inject(SpanContext $context, $format, $carrier)
     {
         return self::getGlobalTracer()->inject($context, $format, $carrier);
     }
 
-    public static function extract(int $format, $carrier) : SpanContext
+    public static function extract($format, $carrier)
     {
         return self::getGlobalTracer()->extract($format, $carrier);
     }
