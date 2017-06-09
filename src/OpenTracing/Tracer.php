@@ -4,10 +4,23 @@ namespace OpenTracing;
 
 interface Tracer
 {
+    /**
+     * @param string $operationName
+     * @return \OpenTracing\Span
+     */
     public function startSpan($operationName, array $options = array());
 
+    /**
+     * @param string $format
+     * @param mixed $carrier
+     */
     public function inject(SpanContext $context, $format, &$carrier);
 
+    /**
+     * @param string $format
+     * @param mixed $carrier
+     * @return \OpenTracing\SpanContext
+     */
     public function extract($format, $carrier);
 
     /**
