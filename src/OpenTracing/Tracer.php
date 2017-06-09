@@ -6,7 +6,7 @@ interface Tracer
 {
     public function startSpan($operationName, array $options = array());
 
-    public function inject(SpanContext $context, $format, $carrier);
+    public function inject(SpanContext $context, $format, &$carrier);
 
     public function extract($format, $carrier);
 

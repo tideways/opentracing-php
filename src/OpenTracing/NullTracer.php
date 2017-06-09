@@ -9,9 +9,8 @@ class NullTracer implements Tracer
         return new NullSpan();
     }
 
-    public function inject(SpanContext $context, $format, $carrier)
+    public function inject(SpanContext $context, $format, &$carrier)
     {
-        return $carrier;
     }
 
     public function extract($format, $carrier) : SpanContext
