@@ -9,8 +9,8 @@ final class OpenTracing
 {
     const FORMAT_TEXT_MAP = 1;
     const FORMAT_BINARY = 2;
-    const FORMAT_PSR7 = 3;
-    const FORMAT_SYMFONY_HTTP = 4;
+    const FORMAT_HTTP_HEADERS = 3;
+    const FORMAT_SERVER_GLOBALS = 4;
 
     const VERSION = "0.3.0";
 
