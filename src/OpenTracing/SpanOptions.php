@@ -7,22 +7,22 @@ class SpanOptions
     /**
      * @var \OpenTracing\Span|OpenTracing\SpanContext
      */
-    public $childOf;
+    private $childOf;
 
     /**
-     * @var \OpenTracing\Span[]|OpenTracing\SpanContext[]
+     * @var \OpenTracing\Reference[]
      */
-    public $references = array();
+    private $references = array();
 
     /**
      * @var array<string,mixed>
      */
-    public $tags = array();
+    private $tags = array();
 
     /**
      * @var \DateTimeInterface
      */
-    public $startTime;
+    private $startTime;
 
     public function __construct(array $options)
     {
@@ -97,5 +97,25 @@ class SpanOptions
                 is_object($value) ? get_class($value) : gettype($value)
             ));
         }
+    }
+
+    public function getChildOf()
+    {
+        return $this->childOf;
+    }
+
+    public function getReferences()
+    {
+        return $this->references;
+    }
+
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    public function getStarTtime()
+    {
+        return $this->startTime;
     }
 }

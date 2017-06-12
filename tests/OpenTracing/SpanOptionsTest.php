@@ -17,17 +17,17 @@ class SpanOptionsTest extends \PHPUnit_Framework_TestCase
             'startTime' => $date = new DateTime(),
         ));
 
-        $this->assertSame($context, $options->childOf);
-        $this->assertEquals(array('foo' => 'bar'), $options->tags);
-        $this->assertSame($date, $options->startTime);
+        $this->assertSame($context, $options->getChildOf());
+        $this->assertEquals(array('foo' => 'bar'), $options->getTags());
+        $this->assertSame($date, $options->getStartTime());
 
         $options = new SpanOptions(array(
             'child_of' => $context,
             'start_time' => $date = new DateTime(),
         ));
 
-        $this->assertSame($context, $options->childOf);
-        $this->assertSame($date, $options->startTime);
+        $this->assertSame($context, $options->getChildOf());
+        $this->assertSame($date, $options->getStartTime());
     }
 
     public function testCreateInvalidChildOf()
