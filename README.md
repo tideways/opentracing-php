@@ -41,6 +41,21 @@ You can manage the tracer instance lifecycle yourself and start spans from it.
 When you combine OpenTracing with the [PSR-11 Container](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md),
 you should expect a tracer service to be named `OpenTracing.Tracer`.
 
+### Flushing Spans
+
+PHP as a request scoped language has no simple means to pass of collected span
+data to a background process before sending it out of process. The OpenTracing
+API makes no assumptions about this, but for PHP that might cause problems for
+Tracer implementations. This is why the PHP API contains a `flush` method that allows
+to trigger a span sending out of process.
+
+```php
+<?php
+
+$tracer = \OpenTracing::getGlobalTracer();
+$tracer->flush();
+```
+
 ### Starting an empty trace by creating a "root span"
 
 Its always possible to create a "root" span with no parent or causal reference:
