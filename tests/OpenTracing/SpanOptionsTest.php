@@ -30,6 +30,15 @@ class SpanOptionsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($date, $options->getStartTime());
     }
 
+    public function testValidReferences()
+    {
+        $context = $this->getMock('OpenTracing\SpanContext');
+
+        $options = new SpanOptions(array(
+            'references' => [Reference::childOf($context)],
+        ));
+    }
+
     public function testCreateInvalidChildOf()
     {
         $this->setExpectedException(InvalidArgumentException::class);

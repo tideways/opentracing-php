@@ -38,7 +38,13 @@ class SpanOptions
                     $this->assertTraversable($value, $key);
 
                     foreach ($value as $idx => $reference) {
-                        $this->assertSpanOrContext($reference, sprintf('%s[%s]', $key, $idx));
+                        if (!($reference instanceof Reference)) {
+                            throw new \InvalidArgumentException(sprintf(
+                                'Property "%s" must be a \OpenTracing\Reference, is: %s',
+                                $key,
+                                is_object($reference) ? get_class($reference) : gettype($reference)
+                            ));
+                        }
 
                         $this->references[] = $reference;
                     }
@@ -79,7 +85,7 @@ class SpanOptions
 
     private function assertSpanOrContext($value, $property)
     {
-        if (!$value instanceof Span && !$value instanceof SpanContext) {
+        if (!($value instanceof Span) && !($value instanceof SpanContext)) {
             throw new \InvalidArgumentException(sprintf(
                 'Property "%s" must be a \OpenTracing\Span or \OpenTracing\SpanContext, is: %s',
                 $property,
