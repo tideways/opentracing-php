@@ -123,6 +123,23 @@ $context = \OpenTracing::extract(\OpenTracing::FORMAT_SERVER_GLOBALS, $_SERVER);
 $span = \OpenTracing::startSpan("my_span", ["child_of" => $context]);
 ```
 
+### Working with multiple References
+
+If you don't have a simple parent child relationship and `child_of` is not enough,
+then you can use the `OpenTracing\Reference` object and `references` option to
+specify the relationships:
+
+```php
+<?php
+
+$parent1 = \OpenTracing::startSpan('parent');
+$parent2 = \OpenTracing::startSpan('parent');
+
+$child = \OpenTracing::startSpan('child', [Reference::followsFrom($parent1), Reference::followsFrom($parent2)]);
+$child->finish();
+$parent->finish();
+```
+
 ### Propagation Formats
 
 The propagation formats should be implemented consistently across all tracers.
