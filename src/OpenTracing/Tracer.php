@@ -6,9 +6,10 @@ interface Tracer
 {
     /**
      * @param string $operationName
+     * @param array|SpanOptions $options
      * @return \OpenTracing\Span
      */
-    public function startSpan($operationName, array $options = array());
+    public function startSpan($operationName, $options = array());
 
     /**
      * @param string $format

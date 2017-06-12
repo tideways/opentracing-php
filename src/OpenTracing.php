@@ -30,16 +30,30 @@ final class OpenTracing
         return self::$tracer;
     }
 
+    /**
+     * @param string $operationName
+     * @param array|SpanOptions $options
+     * @return \OpenTracing\Span
+     */
     public static function startSpan($operationName, array $options = array())
     {
         return self::getGlobalTracer()->startSpan($operationName, $options);
     }
 
+    /**
+     * @param string $format
+     * @param mixed $carrier
+     */
     public static function inject(SpanContext $context, $format, $carrier)
     {
         return self::getGlobalTracer()->inject($context, $format, $carrier);
     }
 
+    /**
+     * @param string $format
+     * @param mixed $carrier
+     * @return \OpenTracing\SpanContext
+     */
     public static function extract($format, $carrier)
     {
         return self::getGlobalTracer()->extract($format, $carrier);
