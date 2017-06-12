@@ -72,7 +72,7 @@ $span->finish();
 
 ### Creating a (child) Span given an existing (parent) Span
 
-```
+```php
 <?php
 
 $parent = \OpenTracing::startSpan('parent');
@@ -92,17 +92,21 @@ When you make a call to a downstream service, via HTTP using cURL or
 file_get_contents  then you need to propagate the trace context via HTTP
 headers, and serialize them to the wire.
 
-```
+```php
 <?php
 
 $headers = [];
 
 $span = \OpenTracing::startSpan("my_span");
 \OpenTracing::inject($span->getContext(), OpenTracing::FORMAT_HTTP_HEADERS, $headers);
-$span->finish();
 
+$ch = curl_init("http://opentracing.io");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 /** format: ['Trace-Id: 1234'] */
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_exec($ch);
+
+$span->finish();
 ```
 
 ### Deserializing from the wire (From Globals)
@@ -111,7 +115,7 @@ PHP always has HTTP Headers in `$_SERVER`. If your application(s) use http
 header for context propagation, then the simplest way to join an existing trace
 is to extract the data directly from the server globals.
 
-```
+```php
 <?php
 
 $context = \OpenTracing::extract(\OpenTracing::FORMAT_SERVER_GLOBALS, $_SERVER);
