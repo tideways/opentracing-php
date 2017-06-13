@@ -148,6 +148,29 @@ $child->finish();
 $parent->finish();
 ```
 
+### Using Span Options
+
+Passing options to the pass can be done using either an array or the
+SpanOptions wrapper object. The following keys are valid:
+
+- `startTime` or `start_time` is a float (or int) representing a timestamp with arbitrary precision.
+- `child_of` or `childOf` is an object of type `OpenTracing\SpanContext` or `OpenTracing\Span`.
+- `references` is an array of `OpenTracing\Reference` objects
+- `tags` is an array with string keys and mixed values that represent OpenTracing tags.
+
+If you want more type safety you can use the SpanOptions directly, but
+technically only the Tracer implementation needs them to validate the inputs.
+
+```php
+<?php
+
+$span = $tracer->createSpan('operation', new SpanOptions([
+    'childOf' => $parentContext,
+    'tags' => ['foo' => 'bar'],
+    'startTime' => $microtime,
+]));
+```
+
 ### Propagation Formats
 
 The propagation formats should be implemented consistently across all tracers.
