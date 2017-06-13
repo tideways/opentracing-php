@@ -30,6 +30,8 @@ if you use multiple ones.
 ```php
 <?php
 
+use OpenTracing;
+
 OpenTracing::setGlobalTracer(new MyTracerImplementation());
 ```
 
@@ -54,12 +56,14 @@ cause problems for Tracer implementations. This is why the PHP API contains a
 ```php
 <?php
 
+use OpenTracing;
+
 // Do application work, buffer spans in memory
 $application->run();
 
 fastcgi_finish_request();
 
-$tracer = \OpenTracing::getGlobalTracer();
+$tracer = OpenTracing::getGlobalTracer();
 $tracer->flush(); // release buffer to backend
 ```
 
@@ -73,9 +77,12 @@ Its always possible to create a "root" span with no parent or causal reference:
 ```php
 <?php
 
-$span = \OpenTracing::startSpan("operation_name");
+use OpenTracing;
+
+$span = OpenTracing::startSpan("operation_name");
 $span->finish();
 
+$tracer = OpenTracing::getGlobalTracer();
 $span = $tracer->startSpan("operation_name");
 $span->finish();
 ```
@@ -85,11 +92,14 @@ $span->finish();
 ```php
 <?php
 
-$parent = \OpenTracing::startSpan('parent');
-$child = \OpenTracing::startSpan('child', ['child_of' => $parent]);
+use OpenTracing;
+
+$parent = OpenTracing::startSpan('parent');
+$child = OpenTracing::startSpan('child', ['child_of' => $parent]);
 $child->finish();
 $parent->finish();
 
+$tracer = OpenTracing::getGlobalTracer();
 $parent = $tracer->startSpan('parent');
 $child = $tracer->startSpan('child', ['child_of' => $parent]);
 $child->finish();
@@ -105,10 +115,12 @@ headers, and serialize them to the wire.
 ```php
 <?php
 
+use OpenTracing;
+
 $headers = [];
 
-$span = \OpenTracing::startSpan("my_span");
-\OpenTracing::inject($span->getContext(), OpenTracing::FORMAT_HTTP_HEADERS, $headers);
+$span = OpenTracing::startSpan("my_span");
+OpenTracing::inject($span->getContext(), OpenTracing::FORMAT_HTTP_HEADERS, $headers);
 
 $ch = curl_init("http://opentracing.io");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -121,16 +133,18 @@ $span->finish();
 
 ### Deserializing from the wire (From Globals)
 
-PHP always has HTTP Headers in `$_SERVER`. If your application(s) use http
+PHP always has HTTP Headers in ``$_SERVER``. If your application(s) use http
 header for context propagation, then the simplest way to join an existing trace
 is to extract the data directly from the server globals.
 
 ```php
 <?php
 
-$context = \OpenTracing::extract(\OpenTracing::FORMAT_SERVER_GLOBALS, $_SERVER);
+use OpenTracing;
 
-$span = \OpenTracing::startSpan("my_span", ["child_of" => $context]);
+$context = OpenTracing::extract(OpenTracing::FORMAT_SERVER_GLOBALS, $_SERVER);
+
+$span = OpenTracing::startSpan("my_span", ["child_of" => $context]);
 ```
 
 ### Working with multiple References
@@ -142,8 +156,11 @@ specify the relationships:
 ```php
 <?php
 
-$parent1 = \OpenTracing::startSpan('parent');
-$parent2 = \OpenTracing::startSpan('parent');
+use OpenTracing;
+use OpenTracing\Reference;
+
+$parent1 = OpenTracing::startSpan('parent');
+$parent2 = OpenTracing::startSpan('parent');
 
 $child = \OpenTracing::startSpan('child', [Reference::followsFrom($parent1), Reference::followsFrom($parent2)]);
 $child->finish();
@@ -165,6 +182,8 @@ technically only the Tracer implementation needs them to validate the inputs.
 
 ```php
 <?php
+
+use OpenTracing\SpanOptions;
 
 $span = $tracer->createSpan('operation', new SpanOptions([
     'child_of' => $parentContext,
