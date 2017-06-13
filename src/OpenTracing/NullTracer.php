@@ -4,7 +4,7 @@ namespace OpenTracing;
 
 class NullTracer implements Tracer
 {
-    public function startSpan($operationName, array $options) : Span
+    public function startSpan($operationName, array $options)
     {
         return new NullSpan();
     }
@@ -13,7 +13,7 @@ class NullTracer implements Tracer
     {
     }
 
-    public function extract($format, $carrier) : SpanContext
+    public function extract($format, $carrier)
     {
         return new NullSpanContext();
     }
