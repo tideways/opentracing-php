@@ -28,7 +28,6 @@ class SpanOptions
     {
         foreach ($options as $key => $value) {
             switch ($key) {
-                case 'childOf':
                 case 'child_of':
                     $this->assertSpanOrContext($value, $key);
                     $this->childOf = $value;
@@ -58,7 +57,6 @@ class SpanOptions
                     }
                     break;
 
-                case 'startTime':
                 case 'start_time':
                     if (!is_int($value) && !is_float($value)) {
                         throw new \InvalidArgumentException(sprintf(

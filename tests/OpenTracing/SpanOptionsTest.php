@@ -12,21 +12,13 @@ class SpanOptionsTest extends \PHPUnit_Framework_TestCase
         $context = $this->getMock('OpenTracing\SpanContext');
 
         $options = new SpanOptions(array(
-            'childOf' => $context,
-            'tags' => array('foo' => 'bar'),
-            'startTime' => $date = microtime(true),
-        ));
-
-        $this->assertSame($context, $options->getChildOf());
-        $this->assertEquals(array('foo' => 'bar'), $options->getTags());
-        $this->assertSame($date, $options->getStartTime());
-
-        $options = new SpanOptions(array(
             'child_of' => $context,
+            'tags' => array('foo' => 'bar'),
             'start_time' => $date = microtime(true),
         ));
 
         $this->assertSame($context, $options->getChildOf());
+        $this->assertEquals(array('foo' => 'bar'), $options->getTags());
         $this->assertSame($date, $options->getStartTime());
     }
 
@@ -73,6 +65,6 @@ class SpanOptionsTest extends \PHPUnit_Framework_TestCase
 
         $context = $this->getMock('OpenTracing\SpanContext');
 
-        new SpanOptions(array('childOf' => $context, 'references' => [$context]));
+        new SpanOptions(array('child_of' => $context, 'references' => [$context]));
     }
 }
