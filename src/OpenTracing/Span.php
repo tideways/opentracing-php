@@ -2,8 +2,6 @@
 
 namespace OpenTracing;
 
-use DateTime;
-
 interface Span
 {
     /**
@@ -19,10 +17,14 @@ interface Span
 
     /**
      * @param string $event
+     * @param float $timestamp
      */
-    public function log($event, array $fields = [], DateTime $timestamp = null);
+    public function log($event, array $fields = [], $timestamp = null);
 
-    public function finish(DateTime $timestamp = null);
+    /**
+     * @param float $timestamp
+     */
+    public function finish($timestamp = null);
 
     /**
      * @param string $name

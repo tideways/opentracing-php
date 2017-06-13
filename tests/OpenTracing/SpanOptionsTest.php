@@ -14,7 +14,7 @@ class SpanOptionsTest extends \PHPUnit_Framework_TestCase
         $options = new SpanOptions(array(
             'childOf' => $context,
             'tags' => array('foo' => 'bar'),
-            'startTime' => $date = new DateTime(),
+            'startTime' => $date = microtime(true),
         ));
 
         $this->assertSame($context, $options->getChildOf());
@@ -23,7 +23,7 @@ class SpanOptionsTest extends \PHPUnit_Framework_TestCase
 
         $options = new SpanOptions(array(
             'child_of' => $context,
-            'start_time' => $date = new DateTime(),
+            'start_time' => $date = microtime(true),
         ));
 
         $this->assertSame($context, $options->getChildOf());

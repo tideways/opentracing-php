@@ -20,7 +20,7 @@ class SpanOptions
     private $tags = array();
 
     /**
-     * @var \DateTimeInterface
+     * @var float
      */
     private $startTime;
 
@@ -60,10 +60,10 @@ class SpanOptions
 
                 case 'startTime':
                 case 'start_time':
-                    if (!($value instanceof \DateTimeInterface)) {
+                    if (!is_int($value) && !is_float($value)) {
                         throw new \InvalidArgumentException(sprintf(
-                            'Property "%s" must be \DateTimeInterface, is: %s',
-                            $property,
+                            'Property "%s" must be float|int, is: %s',
+                            $key,
                             is_object($value) ? get_class($value) : gettype($value)
                         ));
                     }
