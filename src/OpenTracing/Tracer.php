@@ -5,11 +5,52 @@ namespace OpenTracing;
 interface Tracer
 {
     /**
+     * @return \OpenTracing\ActiveSpanSource
+     */
+    public function getActiveSpanSource();
+
+    /**
+     * @return \OpenTracing\Span
+     */
+    public function getActiveSpan();
+
+    /**
+     * Starts and returns a new `Span` representing a unit of work.
+     *
+     * This method differs from `startManualSpan` because it uses in-process
+     * context propagation to keep track of the current active `Span` (if
+     * available).
+     *
+     *	Starting a root `Span` with no casual references and a child `Span`
+     *  in a different function, is possible without passing the parent
+     *  reference around:
+     *
+     *      function handleRequest($request)
+     *      {
+     *          $rootSpan = $this->tracer->startActiveSpan('request.handler');
+     *          $data = $this->getData($request);
+     *      }
+     *
+     *      function getData($request)
+     *      {
+     *          // `$chilSpan` has `$rootSpan` as parent.
+     *          $childSpan = $this->tracer->startActiveSpan('db.query');
+     *      }
+     *
      * @param string $operationName
      * @param array|SpanOptions $options
      * @return \OpenTracing\Span
      */
-    public function startSpan($operationName, $options = array());
+    public function startActiveSpan($operationName, $options = array());
+
+    /**
+     * Starts and returns a new Span representing a unit of work.
+     *
+     * @param string $operationName
+     * @param array|SpanOptions $options
+     * @return \OpenTracing\Span
+     */
+    public function startManualSpan($operationName, $options = array());
 
     /**
      * @param string $format

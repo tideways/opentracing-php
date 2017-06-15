@@ -35,9 +35,19 @@ final class OpenTracing
      * @param array|SpanOptions $options
      * @return \OpenTracing\Span
      */
-    public static function startSpan($operationName, array $options = array())
+    public static function startActiveSpan($operationName, array $options = array())
     {
-        return self::getGlobalTracer()->startSpan($operationName, $options);
+        return self::getGlobalTracer()->startActiveSpan($operationName, $options);
+    }
+
+    /**
+     * @param string $operationName
+     * @param array|SpanOptions $options
+     * @return \OpenTracing\Span
+     */
+    public static function startManualSpan($operationName, array $options = array())
+    {
+        return self::getGlobalTracer()->startManualSpan($operationName, $options);
     }
 
     /**
