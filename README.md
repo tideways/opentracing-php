@@ -79,29 +79,42 @@ Its always possible to create a "root" span with no parent or causal reference:
 
 use OpenTracing;
 
-$span = OpenTracing::startSpan("operation_name");
+$span = OpenTracing::startManualSpan("operation_name");
 $span->finish();
 
 $tracer = OpenTracing::getGlobalTracer();
-$span = $tracer->startSpan("operation_name");
+$span = $tracer->startManualSpan("operation_name");
 $span->finish();
 ```
 
-### Creating a (child) Span given an existing (parent) Span
+### Creating a child Span given an existing parent Span
 
 ```php
 <?php
 
 use OpenTracing;
 
-$parent = OpenTracing::startSpan('parent');
-$child = OpenTracing::startSpan('child', ['child_of' => $parent]);
+$parent = OpenTracing::startManualSpan('parent');
+$child = OpenTracing::startManualSpan('child', ['child_of' => $parent]);
 $child->finish();
 $parent->finish();
 
 $tracer = OpenTracing::getGlobalTracer();
-$parent = $tracer->startSpan('parent');
-$child = $tracer->startSpan('child', ['child_of' => $parent]);
+$parent = $tracer->startManualSpan('parent');
+$child = $tracer->startManualSpan('child', ['child_of' => $parent]);
+$child->finish();
+$parent->finish();
+```
+
+### Creating a child Span using automatic active span management
+
+```php
+<?php
+
+use OpenTracing;
+
+$parent = OpenTracing::startActiveSpan('parent');
+$child = OpenTracing::startActiveSpan('child');
 $child->finish();
 $parent->finish();
 ```
@@ -119,7 +132,7 @@ use OpenTracing;
 
 $headers = [];
 
-$span = OpenTracing::startSpan("my_span");
+$span = OpenTracing::startManualSpan("my_span");
 OpenTracing::inject($span->getContext(), OpenTracing::FORMAT_HTTP_HEADERS, $headers);
 
 $ch = curl_init("http://opentracing.io");
@@ -144,7 +157,7 @@ use OpenTracing;
 
 $context = OpenTracing::extract(OpenTracing::FORMAT_SERVER_GLOBALS, $_SERVER);
 
-$span = OpenTracing::startSpan("my_span", ["child_of" => $context]);
+$span = OpenTracing::startManualSpan("my_span", ["child_of" => $context]);
 ```
 
 ### Working with multiple References
@@ -159,10 +172,10 @@ specify the relationships:
 use OpenTracing;
 use OpenTracing\Reference;
 
-$parent1 = OpenTracing::startSpan('parent');
-$parent2 = OpenTracing::startSpan('parent');
+$parent1 = OpenTracing::startManualSpan('parent');
+$parent2 = OpenTracing::startManualSpan('parent');
 
-$child = \OpenTracing::startSpan('child', [Reference::followsFrom($parent1), Reference::followsFrom($parent2)]);
+$child = \OpenTracing::startManualSpan('child', [Reference::followsFrom($parent1), Reference::followsFrom($parent2)]);
 $child->finish();
 $parent->finish();
 ```
@@ -185,7 +198,7 @@ technically only the Tracer implementation needs them to validate the inputs.
 
 use OpenTracing\SpanOptions;
 
-$span = $tracer->createSpan('operation', new SpanOptions([
+$span = $tracer->startManualSpan('operation', new SpanOptions([
     'child_of' => $parentContext,
     'tags' => ['foo' => 'bar'],
     'start_time' => $microtime,

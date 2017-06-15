@@ -4,9 +4,16 @@ namespace OpenTracing;
 
 class NullSpan implements Span
 {
+    private $context;
+
+    public function __construct()
+    {
+        $this->context = new NullSpanContext();
+    }
+
     public function getContext()
     {
-        return NullSpanContext();
+        return $this->context;
     }
 
     public function setTag($name, $value)
